@@ -13,6 +13,8 @@ Fivem - Police Evidence. Fingerprint, Bullet Case, Magazines, Vehicle Fragments/
 - Forensic Labs Evidence Identifier
 - Evidence File Lockers
 
+![image](https://user-images.githubusercontent.com/82306584/226111138-4c61abec-8601-4077-99d8-8fc9560a0792.png)
+
 # Dependency
 - ox_lib
 - ox_target / qb-target (optional)
@@ -22,7 +24,7 @@ Fivem - Police Evidence. Fingerprint, Bullet Case, Magazines, Vehicle Fragments/
 # Items
 - fingerprintkit
 - evidence
-- this items can found /data/items/
+- this items can found /items/
 
 # Other Info
 - Once Evidence has been proccesed to File. you can use the item to View the Evidence Report.

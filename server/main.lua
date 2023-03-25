@@ -26,10 +26,10 @@ AddStateBagChangeHandler('bullets' --[[key filter]], nil --[[bag filter]], funct
 	if not value then return end
     local src = tonumber(bagName:gsub('player:', ''), 10)
     local evidence = GlobalState.Evidence
-	local player = Players[src]
-	if not player then return end
+	local identifier = Players[src]
+	if not identifier then return end
 	if not evidence.bullets then evidence.bullets = {} end
-	table.insert(evidence.bullets,{serialid = value.serial, coord = value.coord, weapon = value.weapon, identifier = player.identifier, time = os.date("%Y-%m-%d %H:%M:%S"), location = value.location, invehicle = value.invehicle})
+	table.insert(evidence.bullets,{serialid = value.serial, coord = value.coord, weapon = value.weapon, identifier = identifier, time = os.date("%Y-%m-%d %H:%M:%S"), location = value.location, invehicle = value.invehicle})
 	GlobalState.Evidence = evidence
 end)
 
@@ -39,11 +39,10 @@ AddStateBagChangeHandler('magazine' --[[key filter]], nil --[[bag filter]], func
 	if not value then return end
     local src = tonumber(bagName:gsub('player:', ''), 10)
     local evidence = GlobalState.Evidence
-	local player = Players[src]
-	print(player,'magazine',src)
-	if not player then return end
+	local identifier = Players[src]
+	if not identifier then return end
 	if not evidence.magazine then evidence.magazine = {} end
-	table.insert(evidence.magazine,{serialid = value.serial, coord = value.coord, weapon = value.weapon, identifier = player.identifier, time = os.date("%Y-%m-%d %H:%M:%S"), location = value.location, ts = os.time()})
+	table.insert(evidence.magazine,{serialid = value.serial, coord = value.coord, weapon = value.weapon, identifier = identifier, time = os.date("%Y-%m-%d %H:%M:%S"), location = value.location, ts = os.time()})
 	GlobalState.Evidence = evidence
 end)
 
@@ -52,10 +51,10 @@ AddStateBagChangeHandler('bloods' --[[key filter]], nil --[[bag filter]], functi
 	if not value then return end
     local src = tonumber(bagName:gsub('player:', ''), 10)
     local evidence = GlobalState.Evidence
-	local player = Players[src]
-	if not player then return end
+	local identifier = Players[src]
+	if not identifier then return end
 	if not evidence.bloods then evidence.bloods = {} end
-	table.insert(evidence.bloods,{coord = value.coord, identifier = player.identifier, time = os.date("%Y-%m-%d %H:%M:%S"), location = value.location, ts = os.time()})
+	table.insert(evidence.bloods,{coord = value.coord, identifier = identifier, time = os.date("%Y-%m-%d %H:%M:%S"), location = value.location, ts = os.time()})
 	GlobalState.Evidence = evidence
 end)
 
@@ -64,10 +63,10 @@ AddStateBagChangeHandler('vehiclefragments' --[[key filter]], nil --[[bag filter
 	if not value then return end
     local src = tonumber(bagName:gsub('player:', ''), 10)
     local evidence = GlobalState.Evidence
-	local player = Players[src]
-	if not player then return end
+	local identifier = Players[src]
+	if not identifier then return end
 	if not evidence.vehiclefragments then evidence.vehiclefragments = {} end
-	table.insert(evidence.vehiclefragments,{plate = value.plate, coord = value.coord, identifier = player.identifier, time = os.date("%Y-%m-%d %H:%M:%S"), location = value.location, ts = os.time()})
+	table.insert(evidence.vehiclefragments,{plate = value.plate, coord = value.coord, identifier = identifier, time = os.date("%Y-%m-%d %H:%M:%S"), location = value.location, ts = os.time()})
 	print("vehiclefragments")
 	GlobalState.Evidence = evidence
 end)
@@ -157,9 +156,7 @@ RegisterNetEvent('esx:onPlayerJoined', function(src, char, data)
 	local char = char
 	local data = data
 	Wait(5000)
-	local xPlayer = GetPlayerFromId(src)
-	Players[src] = xPlayer
-	GlobalState.Players = Players
+	PlayerLoaded(src)
 end)
 
 RegisterNetEvent('QBCore:Server:OnPlayerLoaded', function()
@@ -167,15 +164,18 @@ RegisterNetEvent('QBCore:Server:OnPlayerLoaded', function()
 	local char = char
 	local data = data
 	Wait(5000)
-	local xPlayer = GetPlayerFromId(src)
-	Players[src] = xPlayer
-	GlobalState.Players = Players
+	PlayerLoaded(src)
 end)
+
+PlayerLoaded = function(src)
+	local src = src
+	local xPlayer = GetPlayerFromId(src)
+	Players[src] = xPlayer.identifier
+end
 
 Citizen.CreateThreadNow(function()
 	if GetResourceState('ox_inventory') ~= 'started' then return end
 	for k,v in pairs(config.evidencelocker) do
-		print("STASH")
 		exports.ox_inventory:RegisterStash('file_locker_'..k, 'Storage', 90, 1000000, false)
 	end
 end)

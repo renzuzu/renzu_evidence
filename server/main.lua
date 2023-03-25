@@ -20,7 +20,7 @@ end
 if not GlobalState.Players then
 	GlobalState.Players = {}
 end
-local Players = GlobalState.Players
+local Players = GlobalState.Players or {}
 AddStateBagChangeHandler('bullets' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
 	Wait(0)
 	if not value then return end
@@ -147,7 +147,7 @@ end)
 
 AddEventHandler("playerDropped",function()
 	local source = source
-	if not Players[source] then return end
+	if Players and not Players[source] then return end
 	Players[source] = nil
 	GlobalState.Players = Players
 end)
@@ -156,11 +156,9 @@ RegisterNetEvent('esx:onPlayerJoined', function(src, char, data)
 	local src = src
 	local char = char
 	local data = data
-	print('player loaded',src)
 	Wait(5000)
 	local xPlayer = GetPlayerFromId(src)
 	Players[src] = xPlayer
-	print(Players[src],'Players[src]')
 	GlobalState.Players = Players
 end)
 
@@ -168,11 +166,9 @@ RegisterNetEvent('QBCore:Server:OnPlayerLoaded', function()
 	local src = source
 	local char = char
 	local data = data
-	print('player loaded',src)
 	Wait(5000)
 	local xPlayer = GetPlayerFromId(src)
 	Players[src] = xPlayer
-	print(Players[src],'Players[src]')
 	GlobalState.Players = Players
 end)
 

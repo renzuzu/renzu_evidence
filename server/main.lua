@@ -147,7 +147,7 @@ end)
 
 AddEventHandler("playerDropped",function()
 	local source = source
-	if Players and not Players[source] then return end
+	if not source or and Players and not Players[source] then return end
 	Players[source] = nil
 	GlobalState.Players = Players
 end)

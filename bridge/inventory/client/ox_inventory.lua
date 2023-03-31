@@ -19,6 +19,7 @@ AddEventHandler('ox_inventory:currentWeapon', function(cw)
 		if not isjob and IsPedShooting(cache.ped) and cd['bullets'] < GetGameTimer() and math.random(1,100) <= config.chances['bullets'] then
 			local _, bullet, _ = RayCastGamePlayCamera(weapon, 200.0,1)
 			cd['bullets'] = GetGameTimer() + config.cooldowns['bullets']
+			if config.WeaponSerialOnly and not currentweapon?.metadata?.serial then return end
 			LocalPlayer.state:set("bullets", {serial = currentweapon.metadata?.serial, coord = vec3(bullet.x,bullet.y,bullet.z), weapon = cw.label, location = GetStreetNames(cache.ped)},true)
 		end
 		if not isjob and IsPedReloading(cache.ped) and cd['magazine'] < GetGameTimer() and math.random(1,100) <= config.chances['magazine'] then

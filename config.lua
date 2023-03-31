@@ -27,6 +27,10 @@ config.evidencelocker = {
 -- vehicle bullets = when player shot a vehicle evidence is triggered ( can be search by cops )
 -- vehicle fragments = when player has a vehicle collision and take the minimum vehicle damage , evidence is triggered
 -- fingerprint = when players drives a vehicle , evidence is triggered
+--- FingerPrintArmHide Lists of Component Drawable ID from arms
+
+config.FingerPrintArmHide = {16,15} -- if player has this GetNumberOfPedDrawableVariations(cache.ped,3) in Arms / gloves. finger print will not trigger
+config.WeaponSerialOnly = false -- if player weapon does not have serial ID. bullets evidence will not trigger
 
 config.chances = { -- chances of evidence triggered
 	['bullets'] = 50, 

@@ -23,6 +23,7 @@ AddEventHandler('gameEventTriggered', function (name, args)
 			LocalPlayer.state:set('bloods', {coord = vec3(targetedCoord.x,targetedCoord.y,z), location = GetStreetNames(cache.ped)}, true)
 		elseif not isjob and IsEntityAVehicle(victim) and not isVehicleCollision and isMelee == 0 and attacker == cache.ped and cd['vehiclebullets'] < GetGameTimer() and math.random(1,100) <= config.chances['vehiclebullets'] then
 			cd['vehiclebullets'] = GetGameTimer() + config.cooldowns['vehiclebullets']
+			if config.WeaponSerialOnly and not currentweapon?.metadata?.serial then return end
 			Entity(victim).state:set("vehiclebullets", {serial = currentweapon?.metadata?.serial, coord = GetEntityCoords(cache.ped), info = {identifier = PlayerData.identifier, location = GetStreetNames(cache.ped), weapon = currentweapon.label}},true)
 		elseif isVehicleCollision and ismyvehicle then
 			if (lastvehiclehealth - GetVehicleBodyHealth(victim)) > 20 and cd['vehiclefragments'] < GetGameTimer() and math.random(1,100) <= config.chances['vehiclefragments'] then	
@@ -120,13 +121,21 @@ AddStateBagChangeHandler("Evidence", "global", function(bagName, key, value)
 	end
 end)
 
+isPlayerHaveGloves = function(arm)
+	for k,v in pairs(config.FingerPrintArmHide) do
+		if v == arm then return true end
+	end
+	return false
+end
+
 lib.onCache('vehicle', function(value)
     if value then
 		currentvehicle = value
 		lastvehiclehealth = GetVehicleBodyHealth(value)
 		local job = PlayerData?.job?.name
         local ent = Entity(value).state
-		if job and math.random(1,100) <= config.chances['fingerprint'] and GetPedInVehicleSeat(value,-1) == cache.ped and not config.jobs[job] then
+		local arm = GetNumberOfPedDrawableVariations(cache.ped,3)
+		if job and not isPlayerHaveGloves(arm) and math.random(1,100) <= config.chances['fingerprint'] and GetPedInVehicleSeat(value,-1) == cache.ped and not config.jobs[job] then
 			ent:set('fingerprint', {coord = coord, plate = GetVehicleNumberPlateText(value), info = {identifier = PlayerData.identifier, location = GetStreetNames(cache.ped)}}, true)
 		elseif job and ent.vehiclebullets and config.jobs[job] then
 			lib.showTextUI('[E] - Search Vehicle', {

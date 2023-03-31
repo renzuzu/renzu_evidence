@@ -20,15 +20,15 @@ end
 
 AddEventHandler('weapons:client:SetCurrentWeapon', function(cw)
 	local evidence = GlobalState.Evidence
+	currentweapon = cw
 	if not cw then return end
 	cw.hash = joaat(cw.name)
 	cw.metadata = cw.info
-	currentweapon = cw
 	for k,v in pairs(cw) do
 		print(k,v)
 	end
 	local isjob = config.jobs[PlayerData?.job?.name]
-	while currentweapon.hash == cw.hash do
+	while currentweapon and currentweapon.hash == cw.hash do
 		Wait(5)
 		local coord = GetEntityCoords(cache.ped)
 		if not isjob and IsPedShooting(cache.ped) and cd['bullets'] < GetGameTimer() and math.random(1,100) <= config.chances['bullets'] then
@@ -43,7 +43,7 @@ AddEventHandler('weapons:client:SetCurrentWeapon', function(cw)
 			Wait(100)
 			while IsPedReloading(cache.ped) do Wait(1) end
 		end
-		if currentweapon.hash == `WEAPON_FLASHLIGHT` and isjob then
+		if currentweapon and currentweapon.hash == `WEAPON_FLASHLIGHT` and isjob then
 			local textui = false
 			local _, z = GetGroundZFor_3dCoord(coord.x,coord.y,coord.z+2.0,false)
 			while IsPlayerFreeAiming(PlayerId()) do

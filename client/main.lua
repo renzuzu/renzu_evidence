@@ -151,6 +151,7 @@ lib.onCache('vehicle', function(value)
 					local net = NetworkGetNetworkIdFromEntity(value)
 					if ent.vehiclebullets then
 						TakeEvidence({info = ent.vehiclebullets.info, plate = ent.vehiclebullets.plate, entity = net, type = 'bullets'})
+						ent:set('vehiclebullets',false,true)
 					else
 						lib.notify({
 							description = 'You did not find anything',

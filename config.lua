@@ -1,5 +1,5 @@
 config = {}
-config.target = true -- false use marker zones. only supports ox_target, qb-target
+config.target = false -- false use marker zones. only supports ox_target, qb-target
 config.jobs = {
 	['police'] = 1, -- grade
 	['swat'] = 1, -- grade
